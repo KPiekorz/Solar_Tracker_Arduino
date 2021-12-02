@@ -1,5 +1,5 @@
 
-/* 
+/* photo resistor analog pins */
 const int SENSOR_ORANGE_PIN = A5;
 const int SENSOR_GREEN_PIN  = A4;
 const int SENSOR_BLUE_PIN   = A3;
