@@ -1,10 +1,10 @@
 /*
  * Leds for signalling working state of system.
  * Button for start and stop system.
- * 
+ *
  */
 
-#define STEP_MS 1000                
+#define STEP_MS 1000
 
 #define DEBUG
 
@@ -30,10 +30,6 @@ void setup() {
   Serial.begin(9600);
 }
 
-static void read_photoresistors(void);
-static void update_state_machine(void);
-static void control_servomotors(void);
-
 void loop() {
 
   read_photoresistors();
@@ -45,7 +41,7 @@ void loop() {
   delay(STEP_MS);
 }
 
-static void read_photoresistors(void) {
+void read_photoresistors(void) {
 
   // read analog input of photoresistors
   sensor_orange = analogRead(SENSOR_ORANGE_PIN);
@@ -62,12 +58,12 @@ static void read_photoresistors(void) {
   LOG_DEBUG(photo_resistor_output);
 }
 
-static void update_state_machine(void) {
+void update_state_machine(void) {
 
-  
+
 }
 
-static void control_servomotors(void) {
+void control_servomotors(void) {
 
-  
+
 }
