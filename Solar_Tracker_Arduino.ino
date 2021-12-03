@@ -23,8 +23,15 @@ const int SENSOR_ORANGE_PIN = A5, SENSOR_GREEN_PIN  = A4, SENSOR_BLUE_PIN   = A3
 /* servos pwm pins */
 const int SERVO_AZIMUTH_PIN = 10, SERVO_ELEVATION_PIN = 11;
 
+/* servos default angles */
+const int SERVO_AZIMUTH_DEFAULT_ANGLE = 90;
+const int SERVO_ELEVATION_DEFAULT_ANGLE = 90;
+
 /* leds pins */
 const int LED_AZIMUTH_PIN = 12, LED_ELEVATION_PIN = 13;
+
+/* button pin */
+const int BUTTTON_PIN = 2;
 
 typedef enum {
   INIT_STATE = 0,
@@ -42,21 +49,28 @@ typedef struct {
   int sensor_orange, sensor_green, sensor_blue, sensor_white;
   /* start/stop button state */
   bool button_pressed;
+  /* start/stop button state last */
+  bool button_pressed_last;
   /* azimuth set state */
   bool azimuth_done;
+  /* servo angle */
+  int azimuth_angle, elevation_angle;
 } solar_tracker_t;
 
 solar_tracker_t solar_tracker = {.state = INIT_STATE,
                                  .sensor_orange = 0, .sensor_green = 0, .sensor_blue = 0, .sensor_white = 0,
                                  .button_pressed = false,
-                                 .azimuth_done = false
+                                 .button_pressed_last = false,
+                                 .azimuth_done = false,
+                                 .azimuth_angle = SERVO_AZIMUTH_DEFAULT_ANGLE, .elevation_angle = SERVO_ELEVATION_DEFAULT_ANGLE
                                 };
 
 void setup() {
   /* init serial com port */
   Serial.begin(9600);
-  /* init interrupt for button */
-  attachInterrupt(digitalPinToInterrupt(2), button_interrupt, RISING);	// Configure interrupt
+  /* init button */
+  pinMode(BUTTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUTTTON_PIN), button_interrupt, FALLING);	// Configure interrupt
   /* init photoresistors analog */
   pinMode(SENSOR_ORANGE_PIN, INPUT);
   pinMode(SENSOR_GREEN_PIN, INPUT);
@@ -80,6 +94,7 @@ void loop() {
 /* interrupt */
 
 void button_interrupt(void) {
+  LOG_DEBUG("Button pressed.");
   solar_tracker.button_pressed = true;
 }
 
@@ -124,16 +139,24 @@ void stop_motors(void) {
 
 }
 
+inline bool is_button_pressed(void) {
+  if (solar_tracker.button_pressed_last == false && solar_tracker.button_pressed == true) {
+    return true;
+  }
+
+  return false;
+}
+
 void state_machine_evolution(void) {
   switch(solar_tracker.state) {
     case INIT_STATE: {
-      if(solar_tracker.button_pressed) {
+      if(is_button_pressed()) {
         set_state(AZIMUTH_CONTROL_STATE);
       }
     }
     break;
     case AZIMUTH_CONTROL_STATE: {
-      if(solar_tracker.button_pressed) {
+      if(is_button_pressed()) {
         set_state(STOP_STATE);
       } else if (solar_tracker.azimuth_done) {
         set_state(ELEVATION_CONTROL_STATE);
@@ -143,7 +166,7 @@ void state_machine_evolution(void) {
     }
     break;
     case ELEVATION_CONTROL_STATE: {
-      if(solar_tracker.button_pressed) {
+      if(is_button_pressed()) {
         set_state(STOP_STATE);
       } else if (!solar_tracker.azimuth_done) {
         set_state(AZIMUTH_CONTROL_STATE);
@@ -154,7 +177,7 @@ void state_machine_evolution(void) {
     break;
     case STOP_STATE: {
       stop_motors();
-      if(solar_tracker.button_pressed) {
+      if(is_button_pressed()) {
         set_state(AZIMUTH_CONTROL_STATE);
       }
     }
@@ -164,10 +187,13 @@ void state_machine_evolution(void) {
     break;
   }
 
+  /* set button pressed last */
+  solar_tracker.button_pressed_last = solar_tracker.button_pressed;
+
   /* clear button pressed */
   solar_tracker.button_pressed = false;
 }
 
 void control_servomotors(void) {
-
+  // fist read old angle of servo and try move servo really slowlly...
 }
