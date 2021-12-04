@@ -55,8 +55,8 @@ typedef struct {
   bool azimuth_done;
   /* servo angle */
   int azimuth_angle, elevation_angle;
-  /* stop state led azimuth last state */
-  int stop_led_state;
+  /* stop and init leds last state */
+  int stop_leds_state, init_leds_state;
 } solar_tracker_t;
 
 solar_tracker_t solar_tracker = {.state = INIT_STATE,
@@ -65,7 +65,7 @@ solar_tracker_t solar_tracker = {.state = INIT_STATE,
                                  .button_pressed_last = false,
                                  .azimuth_done = false,
                                  .azimuth_angle = SERVO_AZIMUTH_DEFAULT_ANGLE, .elevation_angle = SERVO_ELEVATION_DEFAULT_ANGLE,
-                                 .stop_led_state = LOW
+                                 .stop_leds_state = LOW, .init_leds_state = LOW,
                                 };
 
 void setup() {
@@ -153,6 +153,11 @@ inline bool is_button_pressed(void) {
 void state_machine_evolution(void) {
   switch(solar_tracker.state) {
     case INIT_STATE: {
+
+      solar_tracker.init_leds_state = !solar_tracker.init_leds_state;
+      digitalWrite(LED_AZIMUTH_PIN, HIGH);
+      digitalWrite(LED_ELEVATION_PIN, solar_tracker.init_leds_state);
+
       if(is_button_pressed()) {
         set_state(AZIMUTH_CONTROL_STATE);
       }
@@ -188,8 +193,8 @@ void state_machine_evolution(void) {
     break;
     case STOP_STATE: {
 
-      solar_tracker.stop_led_state = !solar_tracker.stop_led_state;
-      digitalWrite(LED_AZIMUTH_PIN, solar_tracker.stop_led_state);
+      solar_tracker.stop_leds_state = !solar_tracker.stop_leds_state;
+      digitalWrite(LED_AZIMUTH_PIN, solar_tracker.stop_leds_state);
       digitalWrite(LED_ELEVATION_PIN, HIGH);
 
       stop_motors();
