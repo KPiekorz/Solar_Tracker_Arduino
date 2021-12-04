@@ -4,7 +4,7 @@
  * Button for start and stop system.
  */
 
-#define STEP_MS             (1000)
+#define STEP_MS             (500)
 
 #define LOG_ALWAYS(s)       Serial.print("[ALWAYS]: " + String(s) + "\n\r");
 #define LOG_ERROR(s)        Serial.print("[ERROR]: " + String(s) + "\n\r");
@@ -28,7 +28,7 @@ const int SERVO_AZIMUTH_DEFAULT_ANGLE = 90;
 const int SERVO_ELEVATION_DEFAULT_ANGLE = 90;
 
 /* leds pins */
-const int LED_AZIMUTH_PIN = 12, LED_ELEVATION_PIN = 13;
+const int LED_ELEVATION_PIN = 12, LED_AZIMUTH_PIN = 13;
 
 /* button pin */
 const int BUTTTON_PIN = 2;
@@ -55,6 +55,8 @@ typedef struct {
   bool azimuth_done;
   /* servo angle */
   int azimuth_angle, elevation_angle;
+  /* stop state led azimuth last state */
+  int stop_led_state;
 } solar_tracker_t;
 
 solar_tracker_t solar_tracker = {.state = INIT_STATE,
@@ -62,7 +64,8 @@ solar_tracker_t solar_tracker = {.state = INIT_STATE,
                                  .button_pressed = false,
                                  .button_pressed_last = false,
                                  .azimuth_done = false,
-                                 .azimuth_angle = SERVO_AZIMUTH_DEFAULT_ANGLE, .elevation_angle = SERVO_ELEVATION_DEFAULT_ANGLE
+                                 .azimuth_angle = SERVO_AZIMUTH_DEFAULT_ANGLE, .elevation_angle = SERVO_ELEVATION_DEFAULT_ANGLE,
+                                 .stop_led_state = LOW
                                 };
 
 void setup() {
@@ -136,7 +139,7 @@ void set_elevation(void) {
 }
 
 void stop_motors(void) {
-
+  // leave servos in current position
 }
 
 inline bool is_button_pressed(void) {
@@ -156,6 +159,10 @@ void state_machine_evolution(void) {
     }
     break;
     case AZIMUTH_CONTROL_STATE: {
+
+      digitalWrite(LED_AZIMUTH_PIN, HIGH);
+      digitalWrite(LED_ELEVATION_PIN, LOW);
+
       if(is_button_pressed()) {
         set_state(STOP_STATE);
       } else if (solar_tracker.azimuth_done) {
@@ -166,6 +173,10 @@ void state_machine_evolution(void) {
     }
     break;
     case ELEVATION_CONTROL_STATE: {
+
+      digitalWrite(LED_AZIMUTH_PIN, LOW);
+      digitalWrite(LED_ELEVATION_PIN, HIGH);
+
       if(is_button_pressed()) {
         set_state(STOP_STATE);
       } else if (!solar_tracker.azimuth_done) {
@@ -176,6 +187,11 @@ void state_machine_evolution(void) {
     }
     break;
     case STOP_STATE: {
+
+      solar_tracker.stop_led_state = !solar_tracker.stop_led_state;
+      digitalWrite(LED_AZIMUTH_PIN, solar_tracker.stop_led_state);
+      digitalWrite(LED_ELEVATION_PIN, HIGH);
+
       stop_motors();
       if(is_button_pressed()) {
         set_state(AZIMUTH_CONTROL_STATE);
@@ -195,5 +211,5 @@ void state_machine_evolution(void) {
 }
 
 void control_servomotors(void) {
-  // fist read old angle of servo and try move servo really slowlly...
+  // first read old angle of servo and try move servo really slowlly...
 }
