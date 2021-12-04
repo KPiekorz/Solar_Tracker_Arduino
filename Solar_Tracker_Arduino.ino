@@ -155,7 +155,7 @@ void state_machine_evolution(void) {
     case INIT_STATE: {
 
       solar_tracker.init_leds_state = !solar_tracker.init_leds_state;
-      digitalWrite(LED_AZIMUTH_PIN, HIGH);
+      digitalWrite(LED_AZIMUTH_PIN, LOW);
       digitalWrite(LED_ELEVATION_PIN, solar_tracker.init_leds_state);
 
       if(is_button_pressed()) {
@@ -195,7 +195,7 @@ void state_machine_evolution(void) {
 
       solar_tracker.stop_leds_state = !solar_tracker.stop_leds_state;
       digitalWrite(LED_AZIMUTH_PIN, solar_tracker.stop_leds_state);
-      digitalWrite(LED_ELEVATION_PIN, HIGH);
+      digitalWrite(LED_ELEVATION_PIN, LOW);
 
       stop_motors();
       if(is_button_pressed()) {
