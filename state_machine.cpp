@@ -22,8 +22,7 @@ static photosensor_t get_the_most_illuminated_sensor(solar_tracker_t * solar_tra
 
 static bool is_equal_illuminated_sensors(solar_tracker_t * solar_tracker, photosensor_t photsesor_a, photosensor_t photsesor_b) {
 
-  if (abs(solar_tracker->photosensors[photsesor_a] - solar_tracker->photosensors[photsesor_b]) < PHOTOSENSOR_ERROR)
-  {
+  if (abs(solar_tracker->photosensors[photsesor_a] - solar_tracker->photosensors[photsesor_b]) < PHOTOSENSOR_ERROR) {
     return true;
   }
 

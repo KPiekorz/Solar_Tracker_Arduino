@@ -4,6 +4,8 @@
  * Button for start and stop system.
  */
 
+#include <Servo.h>
+
 #include "common.h"
 #include "state_machine.h"
 #include "read_photoresistors.h"

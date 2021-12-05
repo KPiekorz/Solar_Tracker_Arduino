@@ -28,7 +28,15 @@ SERVO_AZIMUTH_PIN = 10, SERVO_ELEVATION_PIN = 11,
 /* leds pins */
 LED_ELEVATION_PIN = 12, LED_AZIMUTH_PIN = 13,
 /* button pin */
-BUTTTON_PIN = 2;
+BUTTTON_PIN = 2,
+/*default servos angle in degree */
+DEFAULT_SERVOS_ANGLE = 90,
+/* servo angle interval (can be negative to move to different direction) */
+SERVO_ANGLE_INTERVAL = 1,
+/* servo max angle */
+SERVO_MAX_ANGLE = 180,
+/* servo min angle */
+SERVO_MIN_ANGLE = 0;
 
 typedef enum {
   SERVO_AZIMUTH_STOP,
