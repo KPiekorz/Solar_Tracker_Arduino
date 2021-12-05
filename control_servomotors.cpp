@@ -65,4 +65,6 @@ void control_servomotors(solar_tracker_t * solar_tracker) {
     servo_azimuth.write(azimuth_servo_angle);
     update_servo_angle(solar_tracker, SERVO_ELEVATION_PIN);
     servo_elevation.write(elevatin_servo_angle);
+
+    LOG_DEBUG("Azimuth servo angle: " + String(azimuth_servo_angle, DEC) + " Elevation servo angle: " + String(elevatin_servo_angle, DEC));
 }
