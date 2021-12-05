@@ -5,7 +5,7 @@
 
 #define STEP_MS             (500)
 #define SERIAL_SPEED        (9600)
-#define PHOTOSENSOR_ERROR   (60)
+#define PHOTOSENSOR_ERROR   (30)
 
 #define LOG_ALWAYS(s)       Serial.print("[ALWAYS]: " + String(s) + "\n\r");
 #define LOG_ERROR(s)        Serial.print("[ERROR]: " + String(s) + "\n\r");

@@ -17,7 +17,7 @@ static photosensor_t get_the_most_illuminated_sensor(solar_tracker_t * solar_tra
   photosensor_t p1 =  get_more_illuminated_sensor(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_GREEN);
   photosensor_t p2 =  get_more_illuminated_sensor(solar_tracker, PHOTOSENSOR_BLUE, PHOTOSENSOR_ORANGE);
 
-  return get_more_illuminated_sensor(p1, p2);
+  return get_more_illuminated_sensor(solar_tracker, p1, p2);
 }
 
 static bool is_equal_illuminated_sensors(solar_tracker_t * solar_tracker, photosensor_t photsesor_a, photosensor_t photsesor_b) {
@@ -31,18 +31,34 @@ static bool is_equal_illuminated_sensors(solar_tracker_t * solar_tracker, photos
 }
 
 static bool is_azimuth_done(solar_tracker_t * solar_tracker) {
-  if (is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_GREEN) ||
-      is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_BLUE, PHOTOSENSOR_ORANGE)) {
-    return true;
+
+  switch (get_the_most_illuminated_sensor(solar_tracker)) {
+    case PHOTOSENSOR_GREEN:
+    case PHOTOSENSOR_WHITE:
+      return is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_GREEN, PHOTOSENSOR_WHITE);
+    case PHOTOSENSOR_ORANGE:
+    case PHOTOSENSOR_BLUE:
+      return is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_ORANGE, PHOTOSENSOR_BLUE);
+    default:
+      LOG_ERROR("Wrong sensor.");
+    break;
   }
 
   return false;
 }
 
 static bool is_elevation_done(solar_tracker_t * solar_tracker) {
-  if (is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_BLUE) ||
-      is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_GREEN, PHOTOSENSOR_ORANGE)) {
-    return true;
+
+  switch (get_the_most_illuminated_sensor(solar_tracker)) {
+    case PHOTOSENSOR_WHITE:
+    case PHOTOSENSOR_BLUE:
+      return is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_BLUE);
+    case PHOTOSENSOR_GREEN:
+    case PHOTOSENSOR_ORANGE:
+      return is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_GREEN, PHOTOSENSOR_ORANGE);
+    default:
+      LOG_ERROR("Wrong sensor.");
+    break;
   }
 
   return false;
@@ -67,18 +83,27 @@ static void set_azimuth(solar_tracker_t * solar_tracker) {
 
     if (is_azimuth_done(solar_tracker)) {
       solar_tracker->azimuth_servo_state = SERVO_AZIMUTH_STOP;
+
+      LOG_DEBUG("Azimuth done!");
+
     } else {
       switch(get_the_most_illuminated_sensor(solar_tracker)) {
         case PHOTOSENSOR_GREEN:
         case PHOTOSENSOR_ORANGE:
           solar_tracker->azimuth_servo_state = SERVO_AZIMUTH_MOVE_RIGHT;
+
+          LOG_DEBUG("Azimuth servo right.");
+
         break;
         case PHOTOSENSOR_WHITE:
         case PHOTOSENSOR_BLUE:
           solar_tracker->azimuth_servo_state = SERVO_AZIMUTH_MOVE_LEFT;
+
+          LOG_DEBUG("Azimuth servo left.");
+
         break;
         default:
-          LOG_ERROR("Wrong sensor in set azimuth.");
+          LOG_ERROR("Wrong sensor.");
         break;
       }
     }
