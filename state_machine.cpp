@@ -84,7 +84,7 @@ static void set_azimuth(solar_tracker_t * solar_tracker) {
     if (is_azimuth_done(solar_tracker)) {
       solar_tracker->azimuth_servo_state = SERVO_AZIMUTH_STOP;
 
-      LOG_DEBUG("Azimuth done!");
+      LOG_DEBUG("Azimuth servo stop.");
 
     } else {
       switch(get_the_most_illuminated_sensor(solar_tracker)) {
@@ -118,8 +118,29 @@ static void set_elevation(solar_tracker_t * solar_tracker) {
 
   if (is_elevation_done(solar_tracker)) {
     solar_tracker->elevation_servo_state = SERVO_ELEVATION_STOP;
-  } else {
 
+    LOG_DEBUG("Elevation servo stop.");
+
+  } else {
+    switch (get_the_most_illuminated_sensor(solar_tracker)) {
+      case PHOTOSENSOR_WHITE:
+      case PHOTOSENSOR_GREEN:
+        solar_tracker->elevation_servo_state = SERVO_ELEVATION_MOVE_UP;
+
+        LOG_DEBUG("Elevation servo up.");
+
+      break;
+      case PHOTOSENSOR_BLUE:
+      case PHOTOSENSOR_ORANGE:
+        solar_tracker->elevation_servo_state = SERVO_ELEVATION_MOVE_DOWN;
+
+        LOG_DEBUG("Elevation servo down.");
+
+      break;
+      default:
+        LOG_ERROR("Wrong sensor.");
+      break;
+    }
   }
 }
 
