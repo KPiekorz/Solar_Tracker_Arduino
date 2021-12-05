@@ -24,8 +24,6 @@ const int
 SENSOR_ORANGE_PIN = A5, SENSOR_GREEN_PIN  = A4, SENSOR_BLUE_PIN   = A3, SENSOR_WHITE_PIN  = A2,
 /* servos pwm pins */
 SERVO_AZIMUTH_PIN = 10, SERVO_ELEVATION_PIN = 11,
-/* servos default angles (90 mean in the middle) */
-SERVO_AZIMUTH_DEFAULT_ANGLE = 90, SERVO_ELEVATION_DEFAULT_ANGLE = 90,
 /* leds pins */
 LED_ELEVATION_PIN = 12, LED_AZIMUTH_PIN = 13,
 /* button pin */
@@ -44,6 +42,15 @@ typedef enum {
 } servo_elevation_state_t;
 
 typedef enum {
+  PHOTOSENSOR_GREEN = 0,
+  PHOTOSENSOR_ORANGE = 1,
+  PHOTOSENSOR_WHITE = 2,
+  PHOTOSENSOR_BLUE = 3,
+
+  PHOTOSENSOR_LAST
+} photosensor_t;
+
+typedef enum {
   INIT_STATE = 0,
   ELEVATION_CONTROL_STATE = 1,
   AZIMUTH_CONTROL_STATE = 2,
@@ -56,17 +63,17 @@ typedef struct {
   /* solar tracker state */
   solar_tracker_state_t state;
   /* photoresistors values values */
-  int sensor_orange, sensor_green, sensor_blue, sensor_white;
+  int photosensors[PHOTOSENSOR_LAST];
   /* start/stop button state */
-  bool button_pressed;
-  /* start/stop button state last */
-  bool button_pressed_last;
+  bool button_pressed, button_pressed_last;
   /* azimuth set state */
   bool azimuth_done;
-  /* servo angle */
-  int azimuth_angle, elevation_angle;
   /* stop and init leds last state */
   int stop_leds_state, init_leds_state;
+  /* azimuth servo state */
+  servo_azimuth_state_t azimuth_servo_state;
+  /* elevation servo state */
+  servo_elevation_state_t elevation_servo_state;
 } solar_tracker_t;
 
 #endif /* COMMON_H */

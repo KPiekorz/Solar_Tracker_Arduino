@@ -10,12 +10,12 @@
 #include "control_servomotors.h"
 
 solar_tracker_t solar_tracker = {.state = INIT_STATE,
-                                 .sensor_orange = 0, .sensor_green = 0, .sensor_blue = 0, .sensor_white = 0,
+                                 .photosensors = {0, 0, 0, 0},
                                  .button_pressed = false,
                                  .button_pressed_last = false,
                                  .azimuth_done = false,
-                                 .azimuth_angle = SERVO_AZIMUTH_DEFAULT_ANGLE, .elevation_angle = SERVO_ELEVATION_DEFAULT_ANGLE,
                                  .stop_leds_state = LOW, .init_leds_state = LOW,
+                                 .azimuth_servo_state = SERVO_AZIMUTH_STOP, .elevation_servo_state = SERVO_ELEVATION_STOP
                                 };
 
 #define GetSolarTracker() (&solar_tracker)

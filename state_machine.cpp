@@ -2,6 +2,21 @@
 
 /* static helper function */
 
+// static photosensor_t get_more_illuminated_sensor(photosensor_t photsesor_a, photosensor_t photsesor_b) {
+
+// UNUSED(photsesor_b);
+// return photsesor_a;
+
+// }
+
+// static bool is_equal_illuminated_sensors(photosensor_t photsesor_a, photosensor_t photsesor_b) {
+// UNUSED(photsesor_b);
+// UNUSED(photsesor_a);
+
+// return false;
+
+// }
+
 static void set_state(solar_tracker_t * solar_tracker, solar_tracker_state_t state) {
   if (state < LAST_STATE) {
     LOG_DEBUG("New state: " + String(state, DEC));
@@ -33,8 +48,8 @@ static void set_elevation(solar_tracker_t * solar_tracker) {
 }
 
 static void stop_motors(solar_tracker_t * solar_tracker) {
-    UNUSED(solar_tracker);
-    // leave servos in current position
+    solar_tracker->azimuth_servo_state = SERVO_AZIMUTH_STOP;
+    solar_tracker->elevation_servo_state = SERVO_ELEVATION_STOP;
 }
 
 inline bool is_button_pressed(solar_tracker_t * solar_tracker) {
