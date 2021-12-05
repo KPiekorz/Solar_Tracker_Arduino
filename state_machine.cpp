@@ -1,21 +1,26 @@
 #include "state_machine.h"
+#include <math.h>
 
 /* static helper function */
 
-// static photosensor_t get_more_illuminated_sensor(photosensor_t photsesor_a, photosensor_t photsesor_b) {
+static photosensor_t get_more_illuminated_sensor(solar_tracker_t * solar_tracker, photosensor_t photsesor_a, photosensor_t photsesor_b) {
 
-// UNUSED(photsesor_b);
-// return photsesor_a;
+  if (solar_tracker->photosensors[photsesor_a] < solar_tracker->photosensors[photsesor_b]) {
+    return photsesor_a;
+  }
 
-// }
+  return photsesor_b;
+}
 
-// static bool is_equal_illuminated_sensors(photosensor_t photsesor_a, photosensor_t photsesor_b) {
-// UNUSED(photsesor_b);
-// UNUSED(photsesor_a);
+static bool is_equal_illuminated_sensors(solar_tracker_t * solar_tracker, photosensor_t photsesor_a, photosensor_t photsesor_b) {
 
-// return false;
+  if (abs(solar_tracker->photosensors[photsesor_a] - solar_tracker->photosensors[photsesor_b]) < PHOTOSENSOR_ERROR)
+  {
+    return true;
+  }
 
-// }
+  return false;
+}
 
 static void set_state(solar_tracker_t * solar_tracker, solar_tracker_state_t state) {
   if (state < LAST_STATE) {
@@ -36,6 +41,9 @@ static void set_azimuth(solar_tracker_t * solar_tracker) {
     UNUSED(solar_tracker);
     // sensorValue = analogRead(A0);
     // outputValue = map(sensorValue, 0, 1023, 0, 255);
+
+    LOG_DEBUG("More iluminated: " + String(get_more_illuminated_sensor(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_GREEN), DEC));
+    LOG_DEBUG("Is equal: " + String(is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_GREEN), DEC));
 }
 
 /**
