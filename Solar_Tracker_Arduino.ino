@@ -33,7 +33,7 @@ void setup() {
   pinMode(LED_AZIMUTH_PIN, OUTPUT);
   pinMode(LED_ELEVATION_PIN, OUTPUT);
   /* init servomotors */
-  
+  setup_servomotors();
 }
 
 void loop() {

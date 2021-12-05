@@ -5,4 +5,6 @@
 
 void control_servomotors(solar_tracker_t * solar_tracker);
 
+void setup_servomotors(void);
+
 #endif /* CONTROL_SERVOMOTORS_H */
