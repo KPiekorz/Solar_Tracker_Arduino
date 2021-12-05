@@ -3,9 +3,6 @@
  * Leds for signalling working state of system.
  * Button for start and stop system.
  */
-
-#include <Servo.h>
-
 #include "common.h"
 #include "state_machine.h"
 #include "read_photoresistors.h"
@@ -32,12 +29,11 @@ void setup() {
   pinMode(SENSOR_GREEN_PIN, INPUT);
   pinMode(SENSOR_ORANGE_PIN, INPUT);
   pinMode(SENSOR_WHITE_PIN, INPUT);
-  /* init pwm for servos */
-  pinMode(SERVO_AZIMUTH_PIN, OUTPUT);
-  pinMode(SERVO_ELEVATION_PIN, OUTPUT);
   /* init leds for signaling state */
   pinMode(LED_AZIMUTH_PIN, OUTPUT);
   pinMode(LED_ELEVATION_PIN, OUTPUT);
+  /* init servomotors */
+  
 }
 
 void loop() {

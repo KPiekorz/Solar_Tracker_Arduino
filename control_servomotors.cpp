@@ -1,5 +1,8 @@
+#include <Servo.h>
+
 #include "control_servomotors.h"
 
+static Servo servo_azimuth, servo_elevation;
 static int azimuth_servo_angle = DEFAULT_SERVOS_ANGLE, elevatin_servo_angle = DEFAULT_SERVOS_ANGLE;
 
 /* static helper function */
@@ -50,6 +53,16 @@ static void update_servo_angle(solar_tracker_t * solar_tracker, int servo_pin) {
 
 /* global function */
 
+void setup_servomotors(void) {
+    servo_azimuth.attach(SERVO_AZIMUTH_PIN);
+    servo_azimuth.write(azimuth_servo_angle);
+    servo_elevation.attach(SERVO_ELEVATION_PIN);
+    servo_elevation.write(elevatin_servo_angle);
+}
+
 void control_servomotors(solar_tracker_t * solar_tracker) {
-    
+    update_servo_angle(solar_tracker, SERVO_AZIMUTH_PIN);
+    servo_azimuth.write(azimuth_servo_angle);
+    update_servo_angle(solar_tracker, SERVO_ELEVATION_PIN);
+    servo_elevation.write(elevatin_servo_angle);
 }
