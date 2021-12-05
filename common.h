@@ -67,8 +67,6 @@ typedef struct {
   int photosensors[PHOTOSENSOR_LAST];
   /* start/stop button state */
   bool button_pressed, button_pressed_last;
-  /* azimuth set state */
-  bool azimuth_done;
   /* stop and init leds last state */
   int stop_leds_state, init_leds_state;
   /* azimuth servo state */

@@ -60,8 +60,17 @@ static void stop_motors(solar_tracker_t * solar_tracker) {
     solar_tracker->elevation_servo_state = SERVO_ELEVATION_STOP;
 }
 
-inline bool is_button_pressed(solar_tracker_t * solar_tracker) {
+static bool is_button_pressed(solar_tracker_t * solar_tracker) {
   if (solar_tracker->button_pressed_last == false && solar_tracker->button_pressed == true) {
+    return true;
+  }
+
+  return false;
+}
+
+static bool is_azimuth_done(solar_tracker_t * solar_tracker) {
+  if (is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_WHITE, PHOTOSENSOR_GREEN) &&
+      is_equal_illuminated_sensors(solar_tracker, PHOTOSENSOR_BLUE, PHOTOSENSOR_ORANGE)) {
     return true;
   }
 
@@ -90,7 +99,7 @@ void azimuth_control_state(solar_tracker_t * solar_tracker) {
 
   if(is_button_pressed(solar_tracker)) {
     set_state(solar_tracker, STOP_STATE);
-  } else if (solar_tracker->azimuth_done) {
+  } else if (is_azimuth_done(solar_tracker)) {
     set_state(solar_tracker, ELEVATION_CONTROL_STATE);
   } else {
     set_azimuth(solar_tracker);
@@ -103,7 +112,7 @@ void elevation_control_state(solar_tracker_t * solar_tracker) {
 
   if(is_button_pressed(solar_tracker)) {
     set_state(solar_tracker, STOP_STATE);
-  } else if (!solar_tracker->azimuth_done) {
+  } else if (!is_azimuth_done(solar_tracker)) {
     set_state(solar_tracker, AZIMUTH_CONTROL_STATE);
   } else {
     set_elevation(solar_tracker);

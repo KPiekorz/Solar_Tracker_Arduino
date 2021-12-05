@@ -13,7 +13,6 @@ solar_tracker_t solar_tracker = {.state = INIT_STATE,
                                  .photosensors = {0, 0, 0, 0},
                                  .button_pressed = false,
                                  .button_pressed_last = false,
-                                 .azimuth_done = false,
                                  .stop_leds_state = LOW, .init_leds_state = LOW,
                                  .azimuth_servo_state = SERVO_AZIMUTH_STOP, .elevation_servo_state = SERVO_ELEVATION_STOP
                                 };
