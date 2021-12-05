@@ -12,12 +12,22 @@ static void set_state(solar_tracker_t * solar_tracker, solar_tracker_state_t sta
   }
 }
 
+/**
+ * @brief Set the azimuth object
+ * Only base on read from azimuth photoresistors set moving direction of azimuth servomotor
+ * @param solar_tracker solar tracker object
+ */
 static void set_azimuth(solar_tracker_t * solar_tracker) {
     UNUSED(solar_tracker);
     // sensorValue = analogRead(A0);
     // outputValue = map(sensorValue, 0, 1023, 0, 255);
 }
 
+/**
+ * @brief Set the elevation object
+ * Only base on read from elevation photoresistors set moving direction of elevation servomotor
+ * @param solar_tracker solar tracker object
+ */
 static void set_elevation(solar_tracker_t * solar_tracker) {
     UNUSED(solar_tracker);
 }
