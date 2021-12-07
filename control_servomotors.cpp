@@ -33,6 +33,12 @@ static void update_servo_angle(solar_tracker_t * solar_tracker, int servo_pin) {
                 } else {
                     azimuth_servo_angle = decrease_servo_angle(azimuth_servo_angle);
                 }
+
+                /* set new serwo angle */
+                servo_azimuth.write(azimuth_servo_angle);
+
+                /* store new servo angle to flash... */
+
             }
         break;
         case SERVO_ELEVATION_PIN:
@@ -42,6 +48,12 @@ static void update_servo_angle(solar_tracker_t * solar_tracker, int servo_pin) {
                 } else {
                     elevatin_servo_angle = decrease_servo_angle(elevatin_servo_angle);
                 }
+
+                /* set new serwo angle */
+                servo_elevation.write(elevatin_servo_angle);
+
+                /* store new servo angle to flash... */
+
             }
         break;
         default:
@@ -55,16 +67,15 @@ static void update_servo_angle(solar_tracker_t * solar_tracker, int servo_pin) {
 
 void setup_servomotors(void) {
     servo_azimuth.attach(SERVO_AZIMUTH_PIN);
-    servo_azimuth.write(azimuth_servo_angle);
     servo_elevation.attach(SERVO_ELEVATION_PIN);
-    servo_elevation.write(elevatin_servo_angle);
+
+    /* read of old servo angle from flash memory */
+
 }
 
 void control_servomotors(solar_tracker_t * solar_tracker) {
     update_servo_angle(solar_tracker, SERVO_AZIMUTH_PIN);
-    servo_azimuth.write(azimuth_servo_angle);
     update_servo_angle(solar_tracker, SERVO_ELEVATION_PIN);
-    servo_elevation.write(elevatin_servo_angle);
 
     LOG_DEBUG("Azimuth servo angle: " + String(azimuth_servo_angle, DEC) + " Elevation servo angle: " + String(elevatin_servo_angle, DEC));
 }

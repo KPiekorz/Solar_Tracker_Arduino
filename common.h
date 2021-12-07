@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 
-#define STEP_MS             (100)
+#define STEP_MS             (250)
 #define SERIAL_SPEED        (9600)
 #define PHOTOSENSOR_ERROR   (30)
 
