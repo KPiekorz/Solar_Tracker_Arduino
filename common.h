@@ -32,7 +32,7 @@ BUTTTON_PIN = 2,
 /*default servos angle in degree */
 DEFAULT_SERVOS_ANGLE = 90,
 /* servo angle interval (can be negative to move to different direction) */
-SERVO_ANGLE_INTERVAL = 10,
+SERVO_ANGLE_INTERVAL = 1,
 /* servo max angle */
 SERVO_MAX_ANGLE = 180,
 /* servo min angle */
