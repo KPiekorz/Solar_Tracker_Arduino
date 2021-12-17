@@ -86,10 +86,10 @@ def ConfigDirection(): # ask user to set direction
     print("2 - left")
     d = input("Input direction:> ")
     if d == 1:
-        pin_dir_state = HIGH
+        pin_dir_state = HIGH # go right
 
     if d == 0:
-        pin_dir_state = LOW
+        pin_dir_state = LOW # go left
 
 def SetDirection(): # set direction
     GPIO.output(PinMS1, pin_dir_state)    # Direction
@@ -113,14 +113,26 @@ def SetSteps(): # run motor set step (check swithces all time)
     global step_wanted
     button_left_state = GPIO.input(PinFdCYellow)
     button_right_state = GPIO.input(PinFdCWhite)
-    while button_left_state ==  True and button_right_state == True and step_wanted >= 0:
-        time.sleep(0.001)
-        GPIO.output(PinStep, GPIO.HIGH)
-        time.sleep(0.001)
-        GPIO.output(PinStep, GPIO.LOW)
-        button_left_state = GPIO.input(PinFdCYellow)
-        button_right_state = GPIO.input(PinFdCWhite)
-        step = step - 1
+
+    if pin_dir_state == HIGH: # go right
+        while button_left_state == True and step_wanted >= 0:
+            time.sleep(0.001)
+            GPIO.output(PinStep, GPIO.HIGH)
+            time.sleep(0.001)
+            GPIO.output(PinStep, GPIO.LOW)
+            button_left_state = GPIO.input(PinFdCYellow)
+            button_right_state = GPIO.input(PinFdCWhite)
+            step = step - 1
+
+    if pin_dir_state == LOW: # go left
+        while button_right_state ==  True and step_wanted >= 0:
+            time.sleep(0.001)
+            GPIO.output(PinStep, GPIO.HIGH)
+            time.sleep(0.001)
+            GPIO.output(PinStep, GPIO.LOW)
+            button_left_state = GPIO.input(PinFdCYellow)
+            button_right_state = GPIO.input(PinFdCWhite)
+            step = step - 1
 
     step_wanted = 0
 
