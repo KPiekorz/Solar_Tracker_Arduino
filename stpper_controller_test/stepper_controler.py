@@ -111,6 +111,8 @@ def ConfigSteps(): # ask user to set step
 
 def SetSteps(): # run motor set step (check swithces all time)
     global step_wanted
+    button_left_state = GPIO.input(PinFdCYellow)
+    button_right_state = GPIO.input(PinFdCWhite)
     while button_left_state ==  True and button_right_state == True and step_wanted >= 0:
         time.sleep(0.001)
         GPIO.output(PinStep, GPIO.HIGH)
